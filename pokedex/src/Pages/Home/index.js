@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-function App(props){
+function Home(props){
 
 
 
@@ -15,4 +15,4 @@ Ois galere
 );
 }
 
-export default App;
+export default Home;
