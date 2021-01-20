@@ -45,8 +45,12 @@ function getPokemon(){
 
 function createCard(id, name, imageUrl, types){
   //agora crio uma card com cada informação
+
   let card = document.createElement("div");
   card.className = "card";
+
+  let cardInnerArea = document.createElement("div");
+  cardInnerArea.className = "card-inner-area";
 
   let cardImg = document.createElement("img");
   cardImg.className = "card-img";
@@ -61,7 +65,7 @@ function createCard(id, name, imageUrl, types){
 
   let cardId = document.createElement("div");
   cardId.className = "card-id";
-  cardId.innerHTML = id;
+  cardId.innerHTML = "#"+id;
 
   let typeNames = "";
   types.forEach(element => typeNames += " " +element.type.name);
@@ -71,15 +75,16 @@ function createCard(id, name, imageUrl, types){
   cardType.innerHTML = typeNames;
 
   let buttonCapturar = document.createElement("button");
-  buttonCapturar.classame = "blue-button";
+  buttonCapturar.className = "blue-button";
   buttonCapturar.innerHTML =  "Capturar";
 
 
   mainDiv.appendChild(card);
-  card.appendChild(cardImg);
-  card.appendChild(cardTextInfo);
-  cardTextInfo.appendChild(cardName);
+  card.appendChild(cardInnerArea);
+  cardInnerArea.appendChild(cardImg);
+  cardInnerArea.appendChild(cardTextInfo);
   cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardName);
   cardTextInfo.appendChild(cardType);
   card.appendChild(buttonCapturar);
 }
