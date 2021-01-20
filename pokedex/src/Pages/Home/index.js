@@ -9,7 +9,7 @@ function getPokemon(){
   axios.get('https://pokeapi.co/api/v2/pokemon/')
   .then(response =>{
     const pokemons = response.data.results;
-    console.log(pokemons)
+    console.log(pokemons);
 
 
     pokemons.forEach(pokemon =>{
@@ -18,12 +18,14 @@ function getPokemon(){
 
     axios.get(url)
     .then(response =>{
-      console.log(response)
+
       const atributosDoPokemon = response.data;
+      const id = atributosDoPokemon.id;
       const imageUrl = atributosDoPokemon.sprites.front_default;
-      createCard(imageUrl)
+      const types = atributosDoPokemon.types;
+      console.log(types[0].type.name);
 
-
+      createCard(id,name, imageUrl, types);
 
     })//segundo .then
     .catch(err =>{
@@ -42,7 +44,7 @@ function getPokemon(){
     });
 }
 
-function createCard(imageUrl){
+function createCard(id, name, imageUrl, types){
   //agora crio uma card com cada informação
   let card = document.createElement("div");
   card.className = "card";
@@ -51,8 +53,27 @@ function createCard(imageUrl){
   cardImg.className = "card-img";
   cardImg.src = imageUrl;
 
+  let cardName = document.createElement("div");
+  cardName.className = "card-name";
+  cardName.innerHTML = name;
+
+  let cardId = document.createElement("div");
+  cardId.className = "card-id";
+  cardId.innerHTML = id;
+
+  let typeNames = "";
+  types.forEach(element => typeNames += " " +element.type.name);
+
+  let cardType = document.createElement("div");
+  card.className = "types";
+  cardType.innerHTML = typeNames;
+
+
   mainDiv.appendChild(card);
   card.appendChild(cardImg);
+  card.appendChild(cardName);
+  card.appendChild(cardId);
+  card.appendChild(cardType);
 }
 
 getPokemon();
