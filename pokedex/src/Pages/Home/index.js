@@ -23,7 +23,6 @@ function getPokemon(){
       const id = atributosDoPokemon.id;
       const imageUrl = atributosDoPokemon.sprites.front_default;
       const types = atributosDoPokemon.types;
-      console.log(types[0].type.name);
 
       createCard(id,name, imageUrl, types);
 
@@ -53,6 +52,9 @@ function createCard(id, name, imageUrl, types){
   cardImg.className = "card-img";
   cardImg.src = imageUrl;
 
+  let cardTextInfo = document.createElement("div");
+  cardTextInfo.className = "card-text-info";
+
   let cardName = document.createElement("div");
   cardName.className = "card-name";
   cardName.innerHTML = name;
@@ -65,15 +67,16 @@ function createCard(id, name, imageUrl, types){
   types.forEach(element => typeNames += " " +element.type.name);
 
   let cardType = document.createElement("div");
-  card.className = "types";
+  cardType.className = "types";
   cardType.innerHTML = typeNames;
 
 
   mainDiv.appendChild(card);
   card.appendChild(cardImg);
-  card.appendChild(cardName);
-  card.appendChild(cardId);
-  card.appendChild(cardType);
+  card.appendChild(cardTextInfo);
+  cardTextInfo.appendChild(cardName);
+  cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardType);
 }
 
 getPokemon();
@@ -81,9 +84,8 @@ getPokemon();
 return(
 
 
-<div id = "container">
-Ois galere
-</div>
+<>
+</>
 
 
 );

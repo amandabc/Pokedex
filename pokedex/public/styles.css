@@ -1,0 +1,21 @@
+#root{
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
+}
+
+.card{
+  display: flex;
+  flex-flow: row;
+
+  height: 90px;
+}
+.cardImg{
+  display: inline;
+
+}
+.cardTextInfo{
+  display: inline;
+  
+}
