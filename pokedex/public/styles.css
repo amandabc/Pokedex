@@ -2,9 +2,36 @@
   display: flex;
   flex-flow: column;
   justify-content: center;
-
+  font-family: 'Lato', sans-serif;
 }
 
+.logo{
+  height: 50px;
+}
+
+nav{
+
+  display:flex;
+  flex-flow:row;
+  justify-content: space-between;
+}
+
+.item-navegacao{
+  text-decoration: none;
+}
+
+ul{
+
+  padding-left:0;
+  display:flex;
+  flex-flow:row;
+  justify-content: space-between;
+  list-style-type:none;
+}
+
+li{
+  margin-right: 30px;
+}
 .card{
   display: flex;
   flex-flow: row;
@@ -17,5 +44,5 @@
 }
 .cardTextInfo{
   display: inline;
-  
+
 }

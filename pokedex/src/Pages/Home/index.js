@@ -70,6 +70,10 @@ function createCard(id, name, imageUrl, types){
   cardType.className = "types";
   cardType.innerHTML = typeNames;
 
+  let buttonCapturar = document.createElement("button");
+  buttonCapturar.classame = "blue-button";
+  buttonCapturar.innerHTML =  "Capturar";
+
 
   mainDiv.appendChild(card);
   card.appendChild(cardImg);
@@ -77,6 +81,7 @@ function createCard(id, name, imageUrl, types){
   cardTextInfo.appendChild(cardName);
   cardTextInfo.appendChild(cardId);
   cardTextInfo.appendChild(cardType);
+  card.appendChild(buttonCapturar);
 }
 
 getPokemon();
@@ -85,6 +90,17 @@ return(
 
 
 <>
+
+<nav>
+<img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
+<ul>
+  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <li><input placeholder = "Buscar"></input></li>
+
+</ul>
+</nav>
+
 </>
 
 
