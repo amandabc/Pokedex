@@ -10,67 +10,68 @@ let isLoading = true;
 
 const mainDiv = document.getElementById("root");
 
-<<<<<<< HEAD
-function getAllPokemonNames(){
+//
+// function getAllPokemonNames(){
+//
+//   let i = 1;
+//   while(i<899){
+//
+//     axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
+//     .then(
+//       response =>{
+//       allPokemonNames.push(response.data.name);
+//       }
+//     )
+//     .catch(err =>{
+//       //console.log("Erro ao pegar o pokemon + "+ name);
+//       console.log(err);
+//     })
+//     i+=1;
+//   }//while
+//   console.log(allPokemonNames);
+// }
 
-  let i = 1;
-  while(i<899){
 
-    axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
-    .then(
-      response =>{
-      allPokemonNames.push(response.data.name);
-      }
-    )
-    .catch(err =>{
-      //console.log("Erro ao pegar o pokemon + "+ name);
-      console.log(err);
-    })
-    i+=1;
-  }//while
-  console.log(allPokemonNames);
-}
 
-function getPokemon(){
-=======
 let paginaAtual = 1;
 const ITENS_POR_PAGINA = 20;
->>>>>>> 699e057d5cb0b0228ff17394725e674c2f7e3d9a
+
 
 function getPokemon(){
 
 
   axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9999')
   .then(response =>{
+    //console.log(response);
+    // setTimeout( function(){
+    //   document.getElementById("loading").style.display = "none";
+    // }, 1500);
+
     const pokemons = response.data.results;
 
-    const paginatedData = paginateData(pokemons)
-
+    const paginatedData = paginateData(pokemons);
+    //console.log(paginateData(pokemons));
 
     renderPaginationMenu(paginatedData);
 
-    console.log(paginatedData);
-    mainDiv = document.querySelector(".card");
+
+  //  mainDiv = document.querySelector(".card");
 
 
-    //while (mainDiv.firstChild) {
+    // while (mainDiv.firstChild) {
     //    mainDiv.removeChild(mainDiv.firstChild)
-    //}
-
-    axios.get(url)
-    .then(response =>{
-      setTimeout( function(){
-        document.getElementById("loading").style.display = "none";
-      }, 1500);
+    // }
 
 
     paginatedData[paginaAtual - 1].forEach(pokemon =>{
 
       const { name, url } = pokemon;
 
-
-      axios.get(url)
+      axios.get(url) //pega cada um
       .then(response =>{
+      setTimeout( function(){
+      document.getElementById("loading").style.display = "none";}, 1500);
+
 
         const atributosDoPokemon = response.data;
         const id = atributosDoPokemon.id;
@@ -80,30 +81,21 @@ function getPokemon(){
         createCard(id,name, imageUrl, types);
 
 
-
-    })//segundo .then
-    .catch(err =>{
-      //console.log("Erro ao pegar o pokemon + "+ name);
-      console.log(err);
-    })
-
-
       })//segundo .then
       .catch(err =>{
-        //console.log("Erro ao pegar o pokemon + "+ name);
+        console.log("Erro ao pegar o pokemon + "+ name);
         console.log(err);
       })
 
 
       }); //for each
 
-  })
-
+  })//fim do primeiro then
   .catch(err => {
       console.log("Erro ao puxar os pokemons")
       console.log(err);
     });
-}
+}//fim de getPokemon
 
 const paginateData = (data) => {
   //receber o valor total e o atual para dividir o numero de paginas
@@ -112,17 +104,17 @@ const paginateData = (data) => {
       total[belongArrayIndex] ? total[belongArrayIndex].push(current) : total.push([current])
       return total
   }, [])
-}
+} //paginateData ok
 
 const changePage = (pageToBeRendered) => {
   paginaAtual = pageToBeRendered
   getPokemon()
-}
-//método de mudar de página
+}//método de mudar de página
 
 const renderPaginationMenu = (paginatedData) => {
 
-  const paginationContainer = document.querySelector('.pagination')
+  const paginationContainer = document.getElementById('pagination');
+  console.log(paginationContainer)
   //colocamos nossa div container dos cards em uma variável
 
   while (paginationContainer.firstChild) {
@@ -160,7 +152,7 @@ const renderPaginationMenu = (paginatedData) => {
   paginationContainer.appendChild(nextPage)
 
   //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
-}
+}// renderPaginationMenu
 
 
 function createCard(id, name, imageUrl, types){
@@ -212,9 +204,9 @@ function createCard(id, name, imageUrl, types){
 
   card.appendChild(buttonCapturar);
 
-}
+} //fim de createCard
 
-getAllPokemonNames();
+//getAllPokemonNames();
 getPokemon();
 
 return(
@@ -245,8 +237,6 @@ return(
 
 );
 
-
 }
-
 
 export default Home;
