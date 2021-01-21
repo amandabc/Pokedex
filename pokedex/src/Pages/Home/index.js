@@ -2,15 +2,19 @@ import axios from 'axios';
 
 function Home(props){
 
+
+let isLoading = true;
+
 const mainDiv = document.getElementById("root");
 
 function getPokemon(){
 
   axios.get('https://pokeapi.co/api/v2/pokemon/')
-  .then(response =>{
-    const pokemons = response.data.results;
-    console.log(pokemons);
+  .then(
 
+    response =>{
+
+    const pokemons = response.data.results;
 
     pokemons.forEach(pokemon =>{
 
@@ -18,6 +22,9 @@ function getPokemon(){
 
     axios.get(url)
     .then(response =>{
+      setTimeout( function(){
+        document.getElementById("loading").style.display = "none";
+      }, 1000);
 
       const atributosDoPokemon = response.data;
       const id = atributosDoPokemon.id;
@@ -25,6 +32,8 @@ function getPokemon(){
       const types = atributosDoPokemon.types;
 
       createCard(id,name, imageUrl, types);
+
+
 
     })//segundo .then
     .catch(err =>{
@@ -35,8 +44,8 @@ function getPokemon(){
 
     }); //for each
 
-
   })
+
   .catch(err => {
       console.log("Erro ao puxar os pokemons")
       console.log(err);
@@ -101,15 +110,24 @@ return(
 <ul>
   <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
   <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
-  <li><input placeholder = "Buscar"></input></li>
+  <input class = "caixa-buscar" placeholder = "Buscar"></input>
 
 </ul>
 </nav>
+
+
+<div id="loading">
+  <img id="loading-image" src="images/pikachu-dancing.gif" alt="Carregando..." />
+</div>
+
+
 
 </>
 
 
 );
+
+
 }
 
 export default Home;
