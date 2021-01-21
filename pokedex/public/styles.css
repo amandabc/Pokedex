@@ -88,5 +88,10 @@ li{
 
 }
 #loading-image{
-  margin:20%;
+  margin:20% 20% 0 20%;
+}
+
+#pagina-carregando{
+margin:0 20%;
+align-items: center;
 }

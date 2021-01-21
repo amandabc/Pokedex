@@ -1,11 +1,34 @@
 import axios from 'axios';
 
+const NUMBEROFPOKEMON = 898;
+let allPokemonNames = []
+
 function Home(props){
 
 
 let isLoading = true;
 
 const mainDiv = document.getElementById("root");
+
+function getAllPokemonNames(){
+
+  let i = 1;
+  while(i<899){
+
+    axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
+    .then(
+      response =>{
+      allPokemonNames.push(response.data.name);
+      }
+    )
+    .catch(err =>{
+      //console.log("Erro ao pegar o pokemon + "+ name);
+      console.log(err);
+    })
+    i+=1;
+  }//while
+  console.log(allPokemonNames);
+}
 
 function getPokemon(){
 
@@ -24,7 +47,7 @@ function getPokemon(){
     .then(response =>{
       setTimeout( function(){
         document.getElementById("loading").style.display = "none";
-      }, 1000);
+      }, 1500);
 
       const atributosDoPokemon = response.data;
       const id = atributosDoPokemon.id;
@@ -98,6 +121,7 @@ function createCard(id, name, imageUrl, types){
   card.appendChild(buttonCapturar);
 }
 
+getAllPokemonNames();
 getPokemon();
 
 return(
@@ -118,6 +142,7 @@ return(
 
 <div id="loading">
   <img id="loading-image" src="images/pikachu-dancing.gif" alt="Carregando..." />
+  <p id = "pagina-carregando">Página Carregando</p>
 </div>
 
 
