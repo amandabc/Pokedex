@@ -2,6 +2,9 @@ import axios from 'axios';
 
 function Home(props){
 
+
+let isLoading = true;
+
 const mainDiv = document.getElementById("root");
 
 let paginaAtual = 1;
@@ -9,24 +12,35 @@ const ITENS_POR_PAGINA = 20;
 
 function getPokemon(){
 
+
   axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9999')
   .then(response =>{
     const pokemons = response.data.results;
 
     const paginatedData = paginateData(pokemons)
 
+
     renderPaginationMenu(paginatedData);
 
     console.log(paginatedData);
     mainDiv = document.querySelector(".card");
 
+
     //while (mainDiv.firstChild) {
     //    mainDiv.removeChild(mainDiv.firstChild)
     //}
 
+    axios.get(url)
+    .then(response =>{
+      setTimeout( function(){
+        document.getElementById("loading").style.display = "none";
+      }, 1000);
+
+
     paginatedData[paginaAtual - 1].forEach(pokemon =>{
 
       const { name, url } = pokemon;
+
 
       axios.get(url)
       .then(response =>{
@@ -38,6 +52,15 @@ function getPokemon(){
 
         createCard(id,name, imageUrl, types);
 
+
+
+    })//segundo .then
+    .catch(err =>{
+      //console.log("Erro ao pegar o pokemon + "+ name);
+      console.log(err);
+    })
+
+
       })//segundo .then
       .catch(err =>{
         //console.log("Erro ao pegar o pokemon + "+ name);
@@ -47,8 +70,8 @@ function getPokemon(){
 
       }); //for each
 
-
   })
+
   .catch(err => {
       console.log("Erro ao puxar os pokemons")
       console.log(err);
@@ -115,8 +138,12 @@ const renderPaginationMenu = (paginatedData) => {
 
 function createCard(id, name, imageUrl, types){
   //agora crio uma card com cada informação
+
   let card = document.createElement("div");
   card.className = "card";
+
+  let cardInnerArea = document.createElement("div");
+  cardInnerArea.className = "card-inner-area";
 
   let cardImg = document.createElement("img");
   cardImg.className = "card-img";
@@ -131,7 +158,7 @@ function createCard(id, name, imageUrl, types){
 
   let cardId = document.createElement("div");
   cardId.className = "card-id";
-  cardId.innerHTML = id;
+  cardId.innerHTML = "#"+id;
 
   let typeNames = "";
   types.forEach(element => typeNames += " " +element.type.name);
@@ -140,14 +167,23 @@ function createCard(id, name, imageUrl, types){
   cardType.className = "types";
   cardType.innerHTML = typeNames;
 
+  let buttonCapturar = document.createElement("button");
+  buttonCapturar.className = "blue-button";
+  buttonCapturar.innerHTML =  "Capturar";
+
 
 
   mainDiv.appendChild(card);
-  card.appendChild(cardImg);
-  card.appendChild(cardTextInfo);
-  cardTextInfo.appendChild(cardName);
+  card.appendChild(cardInnerArea);
+  cardInnerArea.appendChild(cardImg);
+  cardInnerArea.appendChild(cardTextInfo);
   cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardName);
   cardTextInfo.appendChild(cardType);
+
+
+
+  card.appendChild(buttonCapturar);
 
 }
 
@@ -157,10 +193,30 @@ return(
 
 
 <>
+
+<nav>
+<img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
+<ul>
+  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <input class = "caixa-buscar" placeholder = "Buscar"></input>
+
+</ul>
+</nav>
+
+
+<div id="loading">
+  <img id="loading-image" src="images/pikachu-dancing.gif" alt="Carregando..." />
+</div>
+
+
+
 </>
 
 
 );
+
+
 }
 
 

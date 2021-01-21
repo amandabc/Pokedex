@@ -2,22 +2,93 @@
   display: flex;
   flex-flow: column;
   justify-content: center;
+  font-family: 'Lato', sans-serif;
+  width: 60%;
+  margin:auto;
+}
 
+.logo{
+  height: 50px;
+}
+
+nav{
+
+  display:flex;
+  flex-flow:row;
+  justify-content: space-between;
+}
+
+.item-navegacao{
+  text-decoration: none;
+}
+
+ul{
+
+  padding-left:0;
+  display:flex;
+  flex-flow:row;
+  justify-content: space-between;
+  list-style-type:none;
+}
+
+li{
+  margin-right: 30px;
+}
+
+.caixa-buscar{
+  width: 120px;
+  margin-right:10px;
 }
 
 .card{
   display: flex;
   flex-flow: row;
+  justify-content: space-between;
+  border: black 1px solid;
+  margin: 10px;
+  padding: 10px;
 
-  height: 90px;
 }
-.cardImg{
-  display: inline;
+
+.card-inner-area{
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+.card-img{
 
 }
-.cardTextInfo{
-  display: inline;
-  
+.card-text-info{
+  margin:10px;
+  padding-top: 5px;
+  text-transform:uppercase;
+}
+.card-id{
+  font-weight: bold;
+  font-size: 32px;
+}
+.blue-button{
+  background-color: #388cf7;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  height: 60px;
+  padding: 10px 20px;
+  font-size: 17px;
+  margin-top: 20px;
+  margin-right: 15px;
+
+
+}
+
+#loading{
+  width: 1000px;
+  height: 4000px;
+  background-color: white;
+
+}
+#loading-image{
+  margin:20%;
 }
 
 .pagination-wrapper {
