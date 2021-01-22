@@ -1,4 +1,6 @@
 import axios from 'axios';
+import TodoList from '../../Pokemos/TodoList';
+import React, { useState, useEffect } from 'react';
 
 import React, { useState, useEffect } from 'react';
 import SearchBar from './Components/SearchBar';
@@ -7,10 +9,13 @@ import PokemonList from './Components/PokemonList';
 const NUMBEROFPOKEMON = 898;
 let allPokemonNames = []
 
-function Home(props){
+function Home(props) {
 
+  // Declare a new state variable, which we'll call "count"
+  const [pokemons, setPokemons] = useState([]);
 
-let isLoading = true;
+  let isLoading = true;
+
 
 const mainDiv = document.getElementById("root");
 const [input, setInput] = useState('');
@@ -39,28 +44,40 @@ const [pokemonList, setPokemonList] = useState();
 
 
 
-let paginaAtual = 1;
-const ITENS_POR_PAGINA = 20;
+  let paginaAtual = 1;
+  const ITENS_POR_PAGINA = 20;
 
 
-function getPokemon(){
+  function getPokemon() {
 
 
-  axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9999')
-  .then(response =>{
-    //console.log(response);
-    // setTimeout( function(){
-    //   document.getElementById("loading").style.display = "none";
-    // }, 1500);
+    axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9999')
+      .then(response => {
+        //console.log(response);
+        // setTimeout( function(){
+        //   document.getElementById("loading").style.display = "none";
+        // }, 1500);
 
-    const pokemons = response.data.results;
+        const pokemons = response.data.results;
+
+      
+
+
 
     const paginatedData = paginateData(pokemons);//[[][][]]
 
 
+        renderPaginationMenu(paginatedData);
 
+
+        //  mainDiv = document.querySelector(".card");
 
     let cardContainer = document.querySelector(".card-wrapper");
+
+
+        // while (mainDiv.firstChild) {
+        //    mainDiv.removeChild(mainDiv.firstChild)
+        // }
 
 
     while (cardContainer.firstChild) {
@@ -68,9 +85,16 @@ function getPokemon(){
     }
 
 
-    paginatedData[paginaAtual - 1].forEach(pokemon =>{
+        paginatedData[paginaAtual - 1].forEach(pokemon => {
 
-      const { name, url } = pokemon;
+          const { name, url } = pokemon;
+
+          axios.get(url) //pega cada um
+            .then(response => {
+              setTimeout(function () {
+                document.getElementById("loading").style.display = "none";
+              }, 1500);
+
 
       axios.get(url) //pega cada um
       .then(response =>{
@@ -78,10 +102,15 @@ function getPokemon(){
       document.getElementById("loading").style.display = "none";}, 1500);
 
 
-        const atributosDoPokemon = response.data;
-        const id = atributosDoPokemon.id;
-        const imageUrl = atributosDoPokemon.sprites.front_default;
-        const types = atributosDoPokemon.types;
+              const atributosDoPokemon = response.data;
+              const id = atributosDoPokemon.id;
+              const imageUrl = atributosDoPokemon.sprites.front_default;
+              const types = atributosDoPokemon.types;
+
+              console.log(id)
+              createPokemonCard(id, name, imageUrl, types)
+              // createCard(id, name, imageUrl, types);
+
 
         // let cardContainer = document.createElement("div");
         // cardContainer.className ="card-container";
@@ -91,14 +120,15 @@ function getPokemon(){
         createCard(id,name, imageUrl, types, cardContainer);
 
 
-      })//segundo .then
-      .catch(err =>{
-        console.log("Erro ao pegar o pokemon + "+ name);
-        console.log(err);
-      })
+            })//segundo .then
+            .catch(err => {
+              console.log("Erro ao pegar o pokemon + " + name);
+              console.log(err);
+            })
 
 
-      }); //for each
+        }); //for each
+
 
       renderPaginationMenu(paginatedData);
 
@@ -109,25 +139,29 @@ function getPokemon(){
     });
 }//fim de getPokemon
 
-const paginateData = (data) => {
-  //receber o valor total e o atual para dividir o numero de paginas
-  return data.reduce((total,current, index) => {
-      const belongArrayIndex = Math.ceil((index + 1 )/ ITENS_POR_PAGINA) -1
+
+  const paginateData = (data) => {
+    //receber o valor total e o atual para dividir o numero de paginas
+    return data.reduce((total, current, index) => {
+      const belongArrayIndex = Math.ceil((index + 1) / ITENS_POR_PAGINA) - 1
       total[belongArrayIndex] ? total[belongArrayIndex].push(current) : total.push([current])
       return total
-  }, [])
-} //paginateData ok
+    }, [])
+  } //paginateData ok
 
-const changePage = (pageToBeRendered) => {
-  paginaAtual = pageToBeRendered
-  getPokemon()
-}//método de mudar de página
+  const changePage = (pageToBeRendered) => {
+    paginaAtual = pageToBeRendered
+    getPokemon()
+  }//método de mudar de página
 
-const renderPaginationMenu = (paginatedData) => {
+  const renderPaginationMenu = (paginatedData) => {
+
 
   const paginationContainer = document.querySelector('.pagination');
 
-  console.log(paginationContainer);
+
+    console.log(paginationContainer);
+
 
   while (paginationContainer.firstChild) {
       paginationContainer.removeChild(paginationContainer.firstChild);
@@ -143,6 +177,7 @@ const renderPaginationMenu = (paginatedData) => {
   //atual não for 1
 
   paginatedData.forEach((_, index) => {
+
       //para cada array (página) dentro do nosso array total criaremos um botão numerado para ir para aquela página
       const pageButton = document.createElement('span');
       pageButton.innerHTML = (index + 1) +" "//index + 1 porque os indices começam em 0 e queremos mostrar a primeira página como 1
@@ -150,58 +185,64 @@ const renderPaginationMenu = (paginatedData) => {
       pageButton.addEventListener('click', () => changePage(index + 1));
 
       if (paginaAtual === index + 1) {
-          pageButton.className = 'active';
+
+        pageButton.className = 'active'
       }
 
-      paginationContainer.appendChild(pageButton);
-  })
+      paginationContainer.appendChild(pageButton)
+    })
 
-  const nextPage = document.createElement('span');
-  nextPage.className = 'page-changer';
-  nextPage.innerHTML = '>';
-  nextPage.addEventListener('click', () => paginaAtual >= paginatedData.length ? () => { } : changePage(paginaAtual + 1));
 
-  paginationContainer.appendChild(nextPage);
+    const nextPage = document.createElement('span')
+    nextPage.className = 'page-changer'
+    nextPage.innerHTML = '>'
+    nextPage.addEventListener('click', () => paginaAtual >= paginatedData.length ? () => { } : changePage(paginaAtual + 1))
 
-  //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
-}// renderPaginationMenu
+    paginationContainer.appendChild(nextPage)
 
+
+    //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
+  }// renderPaginationMenu
 
 function createCard(id, name, imageUrl, types, cardContainer){
   //agora crio uma card com cada informação
 
-  let card = document.createElement("div");
-  card.className = "card";
 
-  let cardInnerArea = document.createElement("div");
-  cardInnerArea.className = "card-inner-area";
 
-  let cardImg = document.createElement("img");
-  cardImg.className = "card-img";
-  cardImg.src = imageUrl;
+  function createCard(id, name, imageUrl, types) {
+    //agora crio uma card com cada informação
 
-  let cardTextInfo = document.createElement("div");
-  cardTextInfo.className = "card-text-info";
+    let card = document.createElement("div");
+    card.className = "card";
 
-  let cardName = document.createElement("div");
-  cardName.className = "card-name";
-  cardName.innerHTML = name;
+    let cardInnerArea = document.createElement("div");
+    cardInnerArea.className = "card-inner-area";
 
-  let cardId = document.createElement("div");
-  cardId.className = "card-id";
-  cardId.innerHTML = "#"+id;
+    let cardImg = document.createElement("img");
+    cardImg.className = "card-img";
+    cardImg.src = imageUrl;
 
-  let typeNames = "";
-  types.forEach(element => typeNames += " " +element.type.name);
+    let cardTextInfo = document.createElement("div");
+    cardTextInfo.className = "card-text-info";
 
-  let cardType = document.createElement("div");
-  cardType.className = "types";
-  cardType.innerHTML = typeNames;
+    let cardName = document.createElement("div");
+    cardName.className = "card-name";
+    cardName.innerHTML = name;
 
-  let buttonCapturar = document.createElement("button");
-  buttonCapturar.className = "blue-button";
-  buttonCapturar.innerHTML =  "Capturar";
+    let cardId = document.createElement("div");
+    cardId.className = "card-id";
+    cardId.innerHTML = "#" + id;
 
+    let typeNames = "";
+    types.forEach(element => typeNames += " " + element.type.name);
+
+    let cardType = document.createElement("div");
+    cardType.className = "types";
+    cardType.innerHTML = typeNames;
+
+    let buttonCapturar = document.createElement("button");
+    buttonCapturar.className = "blue-button";
+    buttonCapturar.innerHTML = "Capturar";
 
 
   cardContainer.appendChild(card);
@@ -214,12 +255,12 @@ function createCard(id, name, imageUrl, types, cardContainer){
 
 
 
-  card.appendChild(buttonCapturar);
+    
 
-} //fim de createCard
+    card.appendChild(buttonCapturar);
 
-//getAllPokemonNames();
-getPokemon();
+
+  } //fim de createCard
 
 
  //barra de pesquisa
@@ -235,7 +276,7 @@ getPokemon();
 
   const updateInput = async (input) => {
      const filtered = pokemonListDefault.filter(pokemon => {
-      return pokemon.name.toLowerCase().startsWith(input.toLowerCase())
+      return pokemon.name.toLowerCase().includes(input.toLowerCase())
      })
      setInput(input);
      setPokemonList(filtered);
@@ -245,7 +286,22 @@ getPokemon();
   useEffect( () => {fetchData()},[]);
 
 
-return(
+
+
+  function createPokemonCard(id, name, imageUrl, types) {
+    // altera o estado adicionando +1 pokemon na lista
+    pokemons.push({ key: id, title: name, text: name, imageUrl: imageUrl, types: types })
+    setPokemons(pokemons)
+   // useState(0);
+  }
+  //getAllPokemonNames();
+
+
+  useEffect(() => {
+    getPokemon();
+  });
+
+  return(
 
 
 <>
@@ -274,6 +330,7 @@ return(
 </div>
 
 <div class = "card-wrapper">
+    <TodoList items={pokemons} />
 </div>
 <div class="pagination-wrapper">
   <div class="pagination"></div>
