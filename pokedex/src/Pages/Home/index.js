@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+import React, { useState, useEffect } from 'react';
+import SearchBar from './Components/SearchBar';
+import PokemonList from './Components/PokemonList';
+
 const NUMBEROFPOKEMON = 898;
 let allPokemonNames = []
 
@@ -9,7 +13,9 @@ function Home(props){
 let isLoading = true;
 
 const mainDiv = document.getElementById("root");
-
+const [input, setInput] = useState('');
+const [pokemonListDefault, setPokemonListDefault] = useState();
+const [pokemonList, setPokemonList] = useState();
 //
 // function getAllPokemonNames(){
 //
@@ -215,6 +221,30 @@ function createCard(id, name, imageUrl, types, cardContainer){
 //getAllPokemonNames();
 getPokemon();
 
+
+ //barra de pesquisa
+
+  const fetchData = async () => {
+    return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
+      .then(response => response.json())
+      .then(data => {
+         setPokemonList(data.results) 
+         setPokemonListDefault(data.results)   
+       });}
+    
+
+  const updateInput = async (input) => {
+     const filtered = pokemonListDefault.filter(pokemon => {
+      return pokemon.name.toLowerCase().includes(input.toLowerCase())
+     })
+     setInput(input);
+     setPokemonList(filtered);
+    
+  }
+
+  useEffect( () => {fetchData()},[]);
+
+
 return(
 
 
@@ -225,7 +255,14 @@ return(
 <ul>
   <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
   <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
-  <input class = "caixa-buscar" placeholder = "Buscar"></input>
+  <SearchBar 
+       input={input} 
+       onChange={updateInput}
+       pokemonList={pokemonList}
+      />
+       <PokemonList pokemonList={pokemonList}/>
+      
+  
 
 </ul>
 </nav>
