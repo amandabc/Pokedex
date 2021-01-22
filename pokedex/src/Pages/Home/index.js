@@ -9,7 +9,6 @@ function Home(props){
 let isLoading = true;
 
 const mainDiv = document.getElementById("root");
-console.log(mainDiv);
 
 //
 // function getAllPokemonNames(){
@@ -50,18 +49,17 @@ function getPokemon(){
 
     const pokemons = response.data.results;
 
-    const paginatedData = paginateData(pokemons);
+    const paginatedData = paginateData(pokemons);//[[][][]]
 
 
-    renderPaginationMenu(paginatedData);
 
 
-  //  mainDiv = document.querySelector(".card");
+    let cardContainer = document.querySelector(".card-wrapper");
 
 
-    // while (mainDiv.firstChild) {
-    //    mainDiv.removeChild(mainDiv.firstChild)
-    // }
+    while (cardContainer.firstChild) {
+       cardContainer.removeChild(cardContainer.firstChild);
+    }
 
 
     paginatedData[paginaAtual - 1].forEach(pokemon =>{
@@ -70,7 +68,7 @@ function getPokemon(){
 
       axios.get(url) //pega cada um
       .then(response =>{
-      setTimeout( function(){
+      setTimeout( function(){ //mudar lugar
       document.getElementById("loading").style.display = "none";}, 1500);
 
 
@@ -79,7 +77,12 @@ function getPokemon(){
         const imageUrl = atributosDoPokemon.sprites.front_default;
         const types = atributosDoPokemon.types;
 
-        createCard(id,name, imageUrl, types);
+        // let cardContainer = document.createElement("div");
+        // cardContainer.className ="card-container";
+        let cardContainer = document.querySelector(".card-wrapper");
+
+        mainDiv.appendChild(cardContainer);
+        createCard(id,name, imageUrl, types, cardContainer);
 
 
       })//segundo .then
@@ -90,6 +93,8 @@ function getPokemon(){
 
 
       }); //for each
+
+      renderPaginationMenu(paginatedData);
 
   })//fim do primeiro then
   .catch(err => {
@@ -114,49 +119,49 @@ const changePage = (pageToBeRendered) => {
 
 const renderPaginationMenu = (paginatedData) => {
 
-  const paginationContainer = document.getElementById('pagination');
+  const paginationContainer = document.querySelector('.pagination');
 
   console.log(paginationContainer);
 
   while (paginationContainer.firstChild) {
-      paginationContainer.removeChild(paginationContainer.firstChild)
+      paginationContainer.removeChild(paginationContainer.firstChild);
   }
   //esvaziamos essa div a cada render para que não seja rendedrizado o menu com os dados da página antiga do usuário
 
-  const previousPage = document.createElement('span')
-  previousPage.className = 'page-changer'
-  previousPage.innerHTML = '<'
-  previousPage.addEventListener('click', () => paginaAtual <= 1 ? () => { } : changePage(paginaAtual - 1))
-  paginationContainer.appendChild(previousPage)
+  const previousPage = document.createElement('span');
+  previousPage.className = 'page-changer';
+  previousPage.innerHTML = '<';
+  previousPage.addEventListener('click', () => paginaAtual <= 1 ? () => { } : changePage(paginaAtual - 1));
+  paginationContainer.appendChild(previousPage);
   //geramos um botão que ao ser clicado atualiza chama o método de mudar de página passando a página anterior se a página
   //atual não for 1
 
   paginatedData.forEach((_, index) => {
       //para cada array (página) dentro do nosso array total criaremos um botão numerado para ir para aquela página
-      const pageButton = document.createElement('span')
-      pageButton.innerHTML = index + 1 //index + 1 porque os indices começam em 0 e queremos mostrar a primeira página como 1
+      const pageButton = document.createElement('span');
+      pageButton.innerHTML = (index + 1) +" "//index + 1 porque os indices começam em 0 e queremos mostrar a primeira página como 1
 
-      pageButton.addEventListener('click', () => changePage(index + 1))
+      pageButton.addEventListener('click', () => changePage(index + 1));
 
       if (paginaAtual === index + 1) {
-          pageButton.className = 'active'
+          pageButton.className = 'active';
       }
 
-      paginationContainer.appendChild(pageButton)
+      paginationContainer.appendChild(pageButton);
   })
 
-  const nextPage = document.createElement('span')
-  nextPage.className = 'page-changer'
-  nextPage.innerHTML = '>'
-  nextPage.addEventListener('click', () => paginaAtual >= paginatedData.length ? () => { } : changePage(paginaAtual + 1))
+  const nextPage = document.createElement('span');
+  nextPage.className = 'page-changer';
+  nextPage.innerHTML = '>';
+  nextPage.addEventListener('click', () => paginaAtual >= paginatedData.length ? () => { } : changePage(paginaAtual + 1));
 
-  paginationContainer.appendChild(nextPage)
+  paginationContainer.appendChild(nextPage);
 
   //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
 }// renderPaginationMenu
 
 
-function createCard(id, name, imageUrl, types){
+function createCard(id, name, imageUrl, types, cardContainer){
   //agora crio uma card com cada informação
 
   let card = document.createElement("div");
@@ -193,7 +198,7 @@ function createCard(id, name, imageUrl, types){
 
 
 
-  mainDiv.appendChild(card);
+  cardContainer.appendChild(card);
   card.appendChild(cardInnerArea);
   cardInnerArea.appendChild(cardImg);
   cardInnerArea.appendChild(cardTextInfo);
@@ -231,11 +236,10 @@ return(
   <p id = "pagina-carregando">Página Carregando</p>
 </div>
 
-<div class = "card wrapper">
-  <div class = "card-container"></div>
+<div class = "card-wrapper">
 </div>
 <div class="pagination-wrapper">
-  <div id="pagination"></div>
+  <div class="pagination"></div>
 </div>
 
 
