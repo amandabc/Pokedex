@@ -2,6 +2,10 @@ import axios from 'axios';
 import TodoList from '../../Pokemos/TodoList';
 import React, { useState, useEffect } from 'react';
 
+import React, { useState, useEffect } from 'react';
+import SearchBar from './Components/SearchBar';
+import PokemonList from './Components/PokemonList';
+
 const NUMBEROFPOKEMON = 898;
 let allPokemonNames = []
 
@@ -12,29 +16,32 @@ function Home(props) {
 
   let isLoading = true;
 
-  const mainDiv = document.getElementById("root");
-  console.log(mainDiv);
 
-  //
-  // function getAllPokemonNames(){
-  //
-  //   let i = 1;
-  //   while(i<899){
-  //
-  //     axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
-  //     .then(
-  //       response =>{
-  //       allPokemonNames.push(response.data.name);
-  //       }
-  //     )
-  //     .catch(err =>{
-  //       //console.log("Erro ao pegar o pokemon + "+ name);
-  //       console.log(err);
-  //     })
-  //     i+=1;
-  //   }//while
-  //   console.log(allPokemonNames);
-  // }
+const mainDiv = document.getElementById("root");
+const [input, setInput] = useState('');
+const [pokemonListDefault, setPokemonListDefault] = useState();
+const [pokemonList, setPokemonList] = useState();
+//
+// function getAllPokemonNames(){
+//
+//   let i = 1;
+//   while(i<899){
+//
+//     axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
+//     .then(
+//       response =>{
+//       allPokemonNames.push(response.data.name);
+//       }
+//     )
+//     .catch(err =>{
+//       //console.log("Erro ao pegar o pokemon + "+ name);
+//       console.log(err);
+//     })
+//     i+=1;
+//   }//while
+//   console.log(allPokemonNames);
+// }
+
 
 
   let paginaAtual = 1;
@@ -53,7 +60,11 @@ function Home(props) {
 
         const pokemons = response.data.results;
 
-        const paginatedData = paginateData(pokemons);
+      
+
+
+
+    const paginatedData = paginateData(pokemons);//[[][][]]
 
 
         renderPaginationMenu(paginatedData);
@@ -61,10 +72,17 @@ function Home(props) {
 
         //  mainDiv = document.querySelector(".card");
 
+    let cardContainer = document.querySelector(".card-wrapper");
+
 
         // while (mainDiv.firstChild) {
         //    mainDiv.removeChild(mainDiv.firstChild)
         // }
+
+
+    while (cardContainer.firstChild) {
+       cardContainer.removeChild(cardContainer.firstChild);
+    }
 
 
         paginatedData[paginaAtual - 1].forEach(pokemon => {
@@ -78,6 +96,12 @@ function Home(props) {
               }, 1500);
 
 
+      axios.get(url) //pega cada um
+      .then(response =>{
+      setTimeout( function(){ //mudar lugar
+      document.getElementById("loading").style.display = "none";}, 1500);
+
+
               const atributosDoPokemon = response.data;
               const id = atributosDoPokemon.id;
               const imageUrl = atributosDoPokemon.sprites.front_default;
@@ -86,6 +110,14 @@ function Home(props) {
               console.log(id)
               createPokemonCard(id, name, imageUrl, types)
               // createCard(id, name, imageUrl, types);
+
+
+        // let cardContainer = document.createElement("div");
+        // cardContainer.className ="card-container";
+        let cardContainer = document.querySelector(".card-wrapper");
+
+        mainDiv.appendChild(cardContainer);
+        createCard(id,name, imageUrl, types, cardContainer);
 
 
             })//segundo .then
@@ -97,12 +129,16 @@ function Home(props) {
 
         }); //for each
 
-      })//fim do primeiro then
-      .catch(err => {
-        console.log("Erro ao puxar os pokemons")
-        console.log(err);
-      });
-  }//fim de getPokemon
+
+      renderPaginationMenu(paginatedData);
+
+  })//fim do primeiro then
+  .catch(err => {
+      console.log("Erro ao puxar os pokemons")
+      console.log(err);
+    });
+}//fim de getPokemon
+
 
   const paginateData = (data) => {
     //receber o valor total e o atual para dividir o numero de paginas
@@ -120,36 +156,42 @@ function Home(props) {
 
   const renderPaginationMenu = (paginatedData) => {
 
-    const paginationContainer = document.getElementById('pagination');
+
+  const paginationContainer = document.querySelector('.pagination');
+
 
     console.log(paginationContainer);
 
-    while (paginationContainer.firstChild) {
-      paginationContainer.removeChild(paginationContainer.firstChild)
-    }
-    //esvaziamos essa div a cada render para que não seja rendedrizado o menu com os dados da página antiga do usuário
 
-    const previousPage = document.createElement('span')
-    previousPage.className = 'page-changer'
-    previousPage.innerHTML = '<'
-    previousPage.addEventListener('click', () => paginaAtual <= 1 ? () => { } : changePage(paginaAtual - 1))
-    paginationContainer.appendChild(previousPage)
-    //geramos um botão que ao ser clicado atualiza chama o método de mudar de página passando a página anterior se a página
-    //atual não for 1
+  while (paginationContainer.firstChild) {
+      paginationContainer.removeChild(paginationContainer.firstChild);
+  }
+  //esvaziamos essa div a cada render para que não seja rendedrizado o menu com os dados da página antiga do usuário
 
-    paginatedData.forEach((_, index) => {
+  const previousPage = document.createElement('span');
+  previousPage.className = 'page-changer';
+  previousPage.innerHTML = '<';
+  previousPage.addEventListener('click', () => paginaAtual <= 1 ? () => { } : changePage(paginaAtual - 1));
+  paginationContainer.appendChild(previousPage);
+  //geramos um botão que ao ser clicado atualiza chama o método de mudar de página passando a página anterior se a página
+  //atual não for 1
+
+  paginatedData.forEach((_, index) => {
+
       //para cada array (página) dentro do nosso array total criaremos um botão numerado para ir para aquela página
-      const pageButton = document.createElement('span')
-      pageButton.innerHTML = index + 1 //index + 1 porque os indices começam em 0 e queremos mostrar a primeira página como 1
+      const pageButton = document.createElement('span');
+      pageButton.innerHTML = (index + 1) +" "//index + 1 porque os indices começam em 0 e queremos mostrar a primeira página como 1
 
-      pageButton.addEventListener('click', () => changePage(index + 1))
+      pageButton.addEventListener('click', () => changePage(index + 1));
 
       if (paginaAtual === index + 1) {
+
         pageButton.className = 'active'
       }
 
       paginationContainer.appendChild(pageButton)
     })
+
 
     const nextPage = document.createElement('span')
     nextPage.className = 'page-changer'
@@ -158,8 +200,13 @@ function Home(props) {
 
     paginationContainer.appendChild(nextPage)
 
+
     //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
   }// renderPaginationMenu
+
+function createCard(id, name, imageUrl, types, cardContainer){
+  //agora crio uma card com cada informação
+
 
 
   function createCard(id, name, imageUrl, types) {
@@ -198,20 +245,48 @@ function Home(props) {
     buttonCapturar.innerHTML = "Capturar";
 
 
+  cardContainer.appendChild(card);
+  card.appendChild(cardInnerArea);
+  cardInnerArea.appendChild(cardImg);
+  cardInnerArea.appendChild(cardTextInfo);
+  cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardName);
+  cardTextInfo.appendChild(cardType);
 
-    mainDiv.appendChild(card);
-    card.appendChild(cardInnerArea);
-    cardInnerArea.appendChild(cardImg);
-    cardInnerArea.appendChild(cardTextInfo);
-    cardTextInfo.appendChild(cardId);
-    cardTextInfo.appendChild(cardName);
-    cardTextInfo.appendChild(cardType);
 
 
+    
 
     card.appendChild(buttonCapturar);
 
+
   } //fim de createCard
+
+
+ //barra de pesquisa
+
+  const fetchData = async () => {
+    return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
+      .then(response => response.json())
+      .then(data => {
+         setPokemonList(data.results) 
+         setPokemonListDefault(data.results)   
+       });}
+    
+
+  const updateInput = async (input) => {
+     const filtered = pokemonListDefault.filter(pokemon => {
+      return pokemon.name.toLowerCase().includes(input.toLowerCase())
+     })
+     setInput(input);
+     setPokemonList(filtered);
+    
+  }
+
+  useEffect( () => {fetchData()},[]);
+
+
+
 
   function createPokemonCard(id, name, imageUrl, types) {
     // altera o estado adicionando +1 pokemon na lista
@@ -221,40 +296,51 @@ function Home(props) {
   }
   //getAllPokemonNames();
 
+
   useEffect(() => {
     getPokemon();
   });
 
-  return (
-    <>
-
-      <nav>
-        <img src="./images/logo.png" alt="Pokedex Logo" class="logo" />
-        <ul>
-          <li><a class="item-navegacao" href="#"> Todos PKMN </a></li>
-          <li><a class="item-navegacao" href="#"> Meus PKMN </a></li>
-          <input class="caixa-buscar" placeholder="Buscar"></input>
-
-        </ul>
-      </nav>
+  return(
 
 
-      <div id="loading">
-        <img id="loading-image" src="images/pikachu-dancing.gif" alt="Carregando..." />
-        <p id="pagina-carregando">Página Carregando</p>
-      </div>
+<>
 
-      <div class="card wrapper">
-        <div class="card-container"></div>
-        <TodoList items={pokemons} />
-      </div>
-      <div class="pagination-wrapper">
-        <div id="pagination"></div>
-      </div>
+<nav>
+<img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
+<ul>
+  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <SearchBar 
+       input={input} 
+       onChange={updateInput}
+       pokemonList={pokemonList}
+      />
+       <PokemonList pokemonList={pokemonList}/>
+      
+  
 
-    </>
+</ul>
+</nav>
 
-  );
+
+<div id="loading">
+  <img id="loading-image" src="images/pikachu-dancing.gif" alt="Carregando..." />
+  <p id = "pagina-carregando">Página Carregando</p>
+</div>
+
+<div class = "card-wrapper">
+    <TodoList items={pokemons} />
+</div>
+<div class="pagination-wrapper">
+  <div class="pagination"></div>
+</div>
+
+
+</>
+
+
+);
 
 }
 
