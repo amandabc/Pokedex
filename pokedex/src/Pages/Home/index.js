@@ -9,6 +9,7 @@ function Home(props){
 let isLoading = true;
 
 const mainDiv = document.getElementById("root");
+console.log(mainDiv);
 
 //
 // function getAllPokemonNames(){
@@ -50,7 +51,7 @@ function getPokemon(){
     const pokemons = response.data.results;
 
     const paginatedData = paginateData(pokemons);
-    //console.log(paginateData(pokemons));
+
 
     renderPaginationMenu(paginatedData);
 
@@ -114,8 +115,8 @@ const changePage = (pageToBeRendered) => {
 const renderPaginationMenu = (paginatedData) => {
 
   const paginationContainer = document.getElementById('pagination');
-  console.log(paginationContainer)
-  //colocamos nossa div container dos cards em uma variável
+
+  console.log(paginationContainer);
 
   while (paginationContainer.firstChild) {
       paginationContainer.removeChild(paginationContainer.firstChild)
@@ -230,6 +231,12 @@ return(
   <p id = "pagina-carregando">Página Carregando</p>
 </div>
 
+<div class = "card wrapper">
+  <div class = "card-container"></div>
+</div>
+<div class="pagination-wrapper">
+  <div id="pagination"></div>
+</div>
 
 
 </>
