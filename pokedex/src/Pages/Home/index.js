@@ -235,7 +235,7 @@ getPokemon();
 
   const updateInput = async (input) => {
      const filtered = pokemonListDefault.filter(pokemon => {
-      return pokemon.name.toLowerCase().includes(input.toLowerCase())
+      return pokemon.name.toLowerCase().startsWith(input.toLowerCase())
      })
      setInput(input);
      setPokemonList(filtered);
