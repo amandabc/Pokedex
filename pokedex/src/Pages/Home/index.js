@@ -5,12 +5,12 @@ import SearchBar from './Components/SearchBar';
 import PokemonList from './Components/PokemonList';
 
 const NUMBEROFPOKEMON = 898;
-let allPokemonNames = []
+
+
+let pokemonsCapturados = [];
 
 function Home(props){
 
-
-let isLoading = true;
 
 const mainDiv = document.getElementById("root");
 const [input, setInput] = useState('');
@@ -201,6 +201,8 @@ function createCard(id, name, imageUrl, types, cardContainer){
   let buttonCapturar = document.createElement("button");
   buttonCapturar.className = "blue-button";
   buttonCapturar.innerHTML =  "Capturar";
+  buttonCapturar.addEventListener('click', capturarPokemon);
+
 
 
 
@@ -218,6 +220,17 @@ function createCard(id, name, imageUrl, types, cardContainer){
 
 } //fim de createCard
 
+function capturarPokemon(name){
+  if (!pokemonsCapturados.includes(name)){
+    pokemonsCapturados.push(name);
+    localStorage.setItem('Pokemons Capturados', pokemonsCapturados);
+  }
+  else{
+    console.log("Pokémon "+ name+" já capturado");
+  }
+
+}
+
 //getAllPokemonNames();
 getPokemon();
 
@@ -228,10 +241,10 @@ getPokemon();
     return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
       .then(response => response.json())
       .then(data => {
-         setPokemonList(data.results) 
-         setPokemonListDefault(data.results)   
+         setPokemonList(data.results)
+         setPokemonListDefault(data.results)
        });}
-    
+
 
   const updateInput = async (input) => {
      const filtered = pokemonListDefault.filter(pokemon => {
@@ -239,7 +252,7 @@ getPokemon();
      })
      setInput(input);
      setPokemonList(filtered);
-    
+
   }
 
   useEffect( () => {fetchData()},[]);
@@ -255,14 +268,14 @@ return(
 <ul>
   <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
   <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
-  <SearchBar 
-       input={input} 
+  <SearchBar
+       input={input}
        onChange={updateInput}
        pokemonList={pokemonList}
       />
        <PokemonList pokemonList={pokemonList}/>
-      
-  
+
+
 
 </ul>
 </nav>
