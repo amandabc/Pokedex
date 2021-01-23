@@ -56,7 +56,8 @@ li{
   justify-content: space-between;
 }
 .card-img{
-
+  width: 100px;
+  height: 100px;
 }
 .card-text-info{
   margin:10px;
@@ -106,9 +107,9 @@ align-items: center;
 .pagination span {
   color: black;
   float: left;
-  padding: 8px 16px;
+  padding: 1px 1.9px;
   text-decoration: none;
-  margin: 0.3rem;
+  margin: 0.2rem;
   transition: background-color 0.3s;
   cursor: pointer;
   border-radius: 50%;
