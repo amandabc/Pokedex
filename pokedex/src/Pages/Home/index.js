@@ -45,7 +45,7 @@ export function renderArray(array, jaForamCapturados){
          document.getElementById("loading").style.display = "none";
        }, 1500);
 
-
+       //console.log(response.data.sprites.front_default);
 
        const atributosDoPokemon = response.data;
        const id = atributosDoPokemon.id;
@@ -297,7 +297,7 @@ let pokemons = [];
 
          setPokemonList(data.results)
          setPokemonListDefault(data.results)
-         //document.querySelector(".resultadosDaBusca").style.display = "inline";
+
        });}
 
 
