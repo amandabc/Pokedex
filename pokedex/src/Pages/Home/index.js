@@ -113,7 +113,8 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
   function capturarPokemon(e){
     let name = e.path[1].id;
 
-    if (!pokemonsCapturados.includes(name)){
+    
+    if(pokemonsCapturados.filter(e => e.name === name).length === 0){
       let url = "https://pokeapi.co/api/v2/pokemon/"+name;
       pokemonsCapturados.push({name:name,  url:url});
       localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
