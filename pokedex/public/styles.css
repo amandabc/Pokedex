@@ -17,7 +17,7 @@ nav{
   display:flex;
   flex-flow:row;
   justify-content: space-between;
- 
+
 }
 
 .item-navegacao{
@@ -73,8 +73,8 @@ li{
   border-radius: 5px;
   outline: none;
   color: #ecc10c;
-  
- 
+
+
 }
 
 
@@ -184,4 +184,8 @@ a:hover {
 
 a:active, :visited {
   color: #ecc10c;
+}
+
+.caixa-buscar{
+  height :  20px;
 }
