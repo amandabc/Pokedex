@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Home from '../Home'
 import SearchBar from '../Home/Components/SearchBar'
