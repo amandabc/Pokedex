@@ -8,6 +8,7 @@ const mainDiv = document.getElementById("root");
 const jaForamCapturados = false;
 
 export function renderArray(array, jaForamCapturados){
+  console.log("tamanho do array:"+ array.length);
  array.forEach(pokemon => {
 
    const { name, url } = pokemon;
@@ -17,6 +18,7 @@ export function renderArray(array, jaForamCapturados){
        setTimeout(function () { //mudar lugar
          document.getElementById("loading").style.display = "none";
        }, 1500);
+
 
 
        const atributosDoPokemon = response.data;
@@ -113,7 +115,8 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
   function capturarPokemon(e){
     let name = e.path[1].id;
 
-    if (!pokemonsCapturados.includes(name)){
+
+    if(pokemonsCapturados.filter(e => e.name === name).length === 0){
       let url = "https://pokeapi.co/api/v2/pokemon/"+name;
       pokemonsCapturados.push({name:name,  url:url});
       localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
@@ -127,10 +130,15 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
 
   function soltarPokemon(e){
     let name = e.path[1].id;
-    console.log(name);
+    //console.log(name);
     removeCard(name);
-    pokemonsCapturados = pokemonsCapturados.filter(function(el){return el.name !== name});
-    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
+    console.log(name);
+    let pokemonsCapturados = localStorage.getItem('pokemonsCapturados');
+    console.log("capturados: "+ pokemonsCapturados);
+    //let pokemonsCapturados1 = pokemonsCapturados.filter(e=> e.name !== name);
+
+
+    //localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados1));
   }
 
 function removeCard(name){
@@ -159,12 +167,12 @@ let pokemons = [];
 
 
 
-  function createPokemonCard(id, name, imageUrl, types) {
-    // altera o estado adicionando +1 pokemon na lista
-    pokemons.push({ key: id, title: name, text: name, imageUrl: imageUrl, types: types })
-    //setPokemons(pokemons)
-    // useState(0);
-  }
+  // function createPokemonCard(id, name, imageUrl, types) {
+  //   // altera o estado adicionando +1 pokemon na lista
+  //   pokemons.push({ key: id, title: name, text: name, imageUrl: imageUrl, types: types })
+  //   //setPokemons(pokemons)
+  //   // useState(0);
+  // }
 
 
   function getPokemon() {
@@ -177,7 +185,7 @@ let pokemons = [];
 
         const pokemons = response.data.results;
         const paginatedData = paginateData(pokemons);
-        renderPaginationMenu(paginatedData);
+
 
     let cardContainer = document.querySelector(".card-wrapper");
 
