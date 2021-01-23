@@ -265,7 +265,7 @@ let pokemons = [];
 
 
 
-getPokemon();
+//getPokemon();
 
   //getAllPokemonNames();
 
