@@ -7,6 +7,8 @@ import PokemonList from './Components/PokemonList';
 const mainDiv = document.getElementById("root");
 const jaForamCapturados = false;
 
+let pokemonsCapturados = [];
+
 export function capturarPokemon(e){
 let name ="";
 console.log(e);
@@ -16,9 +18,7 @@ if(e.path){
 else{
  name = e.nativeEvent.path[1].classList[1];
 }
-  //let name = e.path[1].id;
 
-  //console.log(e.path[1].classList[1]);
 
 
   if(pokemonsCapturados.filter(e => e.name === name).length === 0){
@@ -153,7 +153,7 @@ function removeCard(name){
 }
 
 
-let pokemonsCapturados = [];
+
 
 function Home(props){
 
@@ -275,13 +275,17 @@ let pokemons = [];
 
 
 
+  useEffect(() => { getPokemon();
 
 
-//getPokemon();
-
-  //getAllPokemonNames();
-
-  useEffect(() => { getPokemon() }, []);
+    let listaPokemons = JSON.parse(localStorage.getItem('pokemonsCapturados'));
+    if(listaPokemons!= null){
+      pokemonsCapturados = listaPokemons;
+    }
+    else{
+      pokemonsCapturados = [];
+    }
+  }, []);
 
 
   //barra de pesquisa
