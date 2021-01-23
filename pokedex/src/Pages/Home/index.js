@@ -1,59 +1,41 @@
 import axios from 'axios';
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState,  Component } from "react";
 import SearchBar from './Components/SearchBar';
 import PokemonList from './Components/PokemonList';
 import TodoList from '../../Pokemos/TodoList';
 
 const NUMBEROFPOKEMON = 898;
-let allPokemonNames = []
-
-function Home(props) {
 
 
-  let isLoading = true;
 
-  const mainDiv = document.getElementById("root");
-  const [input, setInput] = useState('');
-  const [pokemonListDefault, setPokemonListDefault] = useState();
-  const [pokemonList, setPokemonList] = useState();
-  const [pokemons, setPokemons] = useState([]);
-  //
-  // function getAllPokemonNames(){
-  //
-  //   let i = 1;
-  //   while(i<899){
-  //
-  //     axios.get('https://pokeapi.co/api/v2/pokemon/'+ i)
-  //     .then(
-  //       response =>{
-  //       allPokemonNames.push(response.data.name);
-  //       }
-  //     )
-  //     .catch(err =>{
-  //       //console.log("Erro ao pegar o pokemon + "+ name);
-  //       console.log(err);
-  //     })
-  //     i+=1;
-  //   }//while
-  //   console.log(allPokemonNames);
-  // }
+let pokemonsCapturados = [];
 
+function Home(props){
+
+
+
+const mainDiv = document.getElementById("root");
+const [input, setInput] = useState('');
+const [pokemonListDefault, setPokemonListDefault] = useState();
+const [pokemonList, setPokemonList] = useState();
+//const [pokemons, setPokemons] = useState();
+
+let pokemons = [];
 
 
   let paginaAtual = 1;
   const ITENS_POR_PAGINA = 20;
 
+
   function createPokemonCard(id, name, imageUrl, types) {
     // altera o estado adicionando +1 pokemon na lista
     pokemons.push({ key: id, title: name, text: name, imageUrl: imageUrl, types: types })
-    setPokemons(pokemons)
+    //setPokemons(pokemons)
     // useState(0);
   }
 
+
   function getPokemon() {
-
-
     axios.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9999')
       .then(response => {
         //console.log(response);
@@ -62,19 +44,14 @@ function Home(props) {
         // }, 1500);
 
         const pokemons = response.data.results;
+        const paginatedData = paginateData(pokemons);
+        renderPaginationMenu(paginatedData);
 
-        const paginatedData = paginateData(pokemons);//[[][][]]
+    let cardContainer = document.querySelector(".card-wrapper");
 
-
-
-
-        let cardContainer = document.querySelector(".card-wrapper");
-
-
-        while (cardContainer.firstChild) {
-          cardContainer.removeChild(cardContainer.firstChild);
-        }
-
+    while (cardContainer.firstChild) {
+       cardContainer.removeChild(cardContainer.firstChild);
+    }
 
         paginatedData[paginaAtual - 1].forEach(pokemon => {
 
@@ -106,7 +83,6 @@ function Home(props) {
               mainDiv.appendChild(cardContainer);
               createCard(id, name, imageUrl, types, cardContainer);
               createPokemonCard(id, name, imageUrl, types)
-
 
             })//segundo .then
             .catch(err => {
@@ -181,14 +157,14 @@ function Home(props) {
     paginationContainer.appendChild(nextPage);
 
     //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
-  }// renderPaginationMenu
+  }// fim de renderPaginationMenu
 
-
-  function createCard(id, name, imageUrl, types, cardContainer) {
+function createCard(id, name, imageUrl, types, cardContainer){
     //agora crio uma card com cada informação
 
     let card = document.createElement("div");
     card.className = "card";
+    card.id = name;
 
     let cardInnerArea = document.createElement("div");
     cardInnerArea.className = "card-inner-area";
@@ -208,6 +184,15 @@ function Home(props) {
     cardId.className = "card-id";
     cardId.innerHTML = "#" + id;
 
+
+  let buttonCapturar = document.createElement("button");
+  buttonCapturar.className = "blue-button";
+  buttonCapturar.innerHTML =  "Capturar";
+  buttonCapturar.name = name;
+  buttonCapturar.addEventListener('click', capturarPokemon);
+
+
+
     let typeNames = "";
     types.forEach(element => typeNames += " " + element.type.name);
 
@@ -215,28 +200,36 @@ function Home(props) {
     cardType.className = "types";
     cardType.innerHTML = typeNames;
 
-    let buttonCapturar = document.createElement("button");
-    buttonCapturar.className = "blue-button";
-    buttonCapturar.innerHTML = "Capturar";
 
-
-
-    cardContainer.appendChild(card);
-    card.appendChild(cardInnerArea);
-    cardInnerArea.appendChild(cardImg);
-    cardInnerArea.appendChild(cardTextInfo);
-    cardTextInfo.appendChild(cardId);
-    cardTextInfo.appendChild(cardName);
-    cardTextInfo.appendChild(cardType);
-
-
-
+  cardContainer.appendChild(card);
+  card.appendChild(cardInnerArea);
+  cardInnerArea.appendChild(cardImg);
+  cardInnerArea.appendChild(cardTextInfo);
+  cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardName);
+  cardTextInfo.appendChild(cardType);
     card.appendChild(buttonCapturar);
-
   } //fim de createCard
 
+function capturarPokemon(e){
+  let name = e.path[1].id;
+
+  if (!pokemonsCapturados.includes(name)){
+    pokemonsCapturados.push(name);
+    localStorage.setItem('Pokemons Capturados', pokemonsCapturados);
+    console.log("Capturou "+ name);
+  }
+  else{
+    console.log("Pokémon "+ name+" já capturado");
+  }
+
+}
+
+
+getPokemon();
+
   //getAllPokemonNames();
-  
+
   useEffect(() => { getPokemon() }, []);
 
 
@@ -246,22 +239,26 @@ function Home(props) {
     return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
       .then(response => response.json())
       .then(data => {
-        setPokemonList(data.results)
-        setPokemonListDefault(data.results)
-      });
-  }
+         setPokemonList(data.results)
+         setPokemonListDefault(data.results)
+       });}
 
 
   const updateInput = async (input) => {
-    const filtered = pokemonListDefault.filter(pokemon => {
-      return pokemon.name.toLowerCase().startsWith(input.toLowerCase())
-    })
-    setInput(input);
-    setPokemonList(filtered);
+     const filtered = pokemonListDefault.filter(pokemon => {
+      return pokemon.name.toLowerCase().includes(input.toLowerCase())
+     })
+     setInput(input);
+     setPokemonList(filtered);
 
   }
 
+
+
+
   useEffect(() => { fetchData() }, []);
+
+
 
 
   return (
@@ -269,17 +266,20 @@ function Home(props) {
 
     <>
 
-      <nav>
-        <img src="./images/logo.png" alt="Pokedex Logo" class="logo" />
-        <ul>
-          <li><a class="item-navegacao" href="#"> Todos PKMN </a></li>
-          <li><a class="item-navegacao" href="#"> Meus PKMN </a></li>
-          <SearchBar
-            input={input}
-            onChange={updateInput}
-            pokemonList={pokemonList}
-          />
-          <PokemonList pokemonList={pokemonList} />
+
+
+
+<nav>
+<img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
+<ul>
+  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <SearchBar
+       input={input}
+       onChange={updateInput}
+       pokemonList={pokemonList}
+      />
+       <PokemonList pokemonList={pokemonList}/>
 
 
 
