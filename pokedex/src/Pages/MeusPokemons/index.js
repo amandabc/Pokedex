@@ -4,6 +4,7 @@ import {renderArray} from '../Home'
 import SearchBar from '../Home/Components/SearchBar'
 import {useHistory} from 'react-router-dom';
 
+const jaForamCapturados = true;
 
 export default function MeusPokemons(){
   const history = useHistory();
@@ -17,7 +18,7 @@ export default function MeusPokemons(){
   setPokemonsList(pokemonsList)
   console.log(pokemonsList)
 
-  renderArray(pokemonsList);
+  renderArray(pokemonsList,jaForamCapturados );
 
 
   } else {

@@ -5,8 +5,9 @@ import PokemonList from './Components/PokemonList';
 import TodoList from '../../Pokemos/TodoList';
 
 const mainDiv = document.getElementById("root");
+const jaForamCapturados = false;
 
-export function renderArray(array){
+export function renderArray(array, jaForamCapturados){
  array.forEach(pokemon => {
 
    const { name, url } = pokemon;
@@ -35,7 +36,8 @@ export function renderArray(array){
        let cardContainer = document.querySelector(".card-wrapper");
 
        mainDiv.appendChild(cardContainer);
-       createCard(id, name, imageUrl, types, cardContainer);
+
+       createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados);
        // createPokemonCard(id, name, imageUrl, types)
 
      })//segundo .then
@@ -50,7 +52,7 @@ export function renderArray(array){
 
 } //fim render array
 
-function createCard(id, name, imageUrl, types, cardContainer){
+function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados){
     //agora crio uma card com cada informação
 
     let card = document.createElement("div");
@@ -78,11 +80,17 @@ function createCard(id, name, imageUrl, types, cardContainer){
 
   let buttonCapturar = document.createElement("button");
   buttonCapturar.className = "blue-button";
-  buttonCapturar.innerHTML =  "Capturar";
+
+  if(!jaForamCapturados){
+      buttonCapturar.innerHTML =  "Capturar";
+      buttonCapturar.addEventListener('click', capturarPokemon);
+  }
+  else{
+    buttonCapturar.innerHTML =  "Soltar";
+    buttonCapturar.addEventListener('click', soltarPokemon);
+  }
+
   buttonCapturar.name = name;
-  buttonCapturar.addEventListener('click', capturarPokemon);
-
-
 
     let typeNames = "";
     types.forEach(element => typeNames += " " + element.type.name);
@@ -116,6 +124,18 @@ function createCard(id, name, imageUrl, types, cardContainer){
     }
 
   }//fim de capturar pokemon
+
+  function soltarPokemon(e){
+    let name = e.path[1].id;
+    console.log(name);
+    removeCard(name);
+    pokemonsCapturados = pokemonsCapturados.filter(function(el){return el.name !== name});
+    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
+  }
+
+function removeCard(name){
+  document.getElementById(name).remove();
+}
 
 
 let pokemonsCapturados = [];
