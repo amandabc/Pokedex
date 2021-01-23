@@ -262,7 +262,7 @@ let pokemons = [];
 
 
 
-getPokemon();
+//getPokemon();
 
   //getAllPokemonNames();
 
@@ -329,7 +329,9 @@ getPokemon();
       </div>
 
       <div class="card-wrapper">
-        <TodoList items={pokemons} />
+        <div class="card-item">
+          <TodoList items={pokemons} />
+        </div>
       </div>
       <div class="pagination-wrapper">
         <div class="pagination"></div>
@@ -340,7 +342,7 @@ getPokemon();
 
 
   );
-
+  
 }
 
 export default Home;
