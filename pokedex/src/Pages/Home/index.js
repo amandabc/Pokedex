@@ -53,45 +53,9 @@ let pokemons = [];
        cardContainer.removeChild(cardContainer.firstChild);
     }
 
-        paginatedData[paginaAtual - 1].forEach(pokemon => {
-
-          const { name, url } = pokemon;
-
-          axios.get(url) //pega cada um
-            .then(response => {
-              setTimeout(function () { //mudar lugar
-                document.getElementById("loading").style.display = "none";
-              }, 1500);
-
-
-              const atributosDoPokemon = response.data;
-              const id = atributosDoPokemon.id;
-              const types = atributosDoPokemon.types;
-
-              var imageUrl = atributosDoPokemon.sprites.front_default;
-              if (imageUrl == null) {
-                imageUrl = atributosDoPokemon.sprites.other['official-artwork'].front_default;
-                if (imageUrl == null) {
-                  imageUrl = 'https://cdn-0.imagensemoldes.com.br/wp-content/uploads/2020/04/Logo-Pokebola-Pok%C3%A9mon-PNG.png';
-                }
-              }
-
-              // let cardContainer = document.createElement("div");
-              // cardContainer.className ="card-container";
-              let cardContainer = document.querySelector(".card-wrapper");
-
-              mainDiv.appendChild(cardContainer);
-              createCard(id, name, imageUrl, types, cardContainer);
-              createPokemonCard(id, name, imageUrl, types)
-
-            })//segundo .then
-            .catch(err => {
-              console.log("Erro ao pegar o pokemon + " + name);
-              console.log(err);
-            })
-
-
-        }); //for each
+//daqui
+      renderPokemons(paginatedData[paginaAtual-1]);
+        //ate aqui
 
         renderPaginationMenu(paginatedData);
 
@@ -101,6 +65,48 @@ let pokemons = [];
         console.log(err);
       });
   }//fim de getPokemon
+
+  function renderPokemons(arrayPokemons){
+    arrayPokemons.forEach(pokemon => {
+
+      const { name, url } = pokemon;
+
+      axios.get(url) //pega cada um
+        .then(response => {
+          setTimeout(function () { //mudar lugar
+            document.getElementById("loading").style.display = "none";
+          }, 1500);
+
+
+          const atributosDoPokemon = response.data;
+          const id = atributosDoPokemon.id;
+          const types = atributosDoPokemon.types;
+
+          var imageUrl = atributosDoPokemon.sprites.front_default;
+          if (imageUrl == null) {
+            imageUrl = atributosDoPokemon.sprites.other['official-artwork'].front_default;
+            if (imageUrl == null) {
+              imageUrl = 'https://cdn-0.imagensemoldes.com.br/wp-content/uploads/2020/04/Logo-Pokebola-Pok%C3%A9mon-PNG.png';
+            }
+          }
+
+          // let cardContainer = document.createElement("div");
+          // cardContainer.className ="card-container";
+          let cardContainer = document.querySelector(".card-wrapper");
+
+          mainDiv.appendChild(cardContainer);
+          createCard(id, name, imageUrl, types, cardContainer);
+          createPokemonCard(id, name, imageUrl, types)
+
+        })//segundo .then
+        .catch(err => {
+          console.log("Erro ao pegar o pokemon + " + name);
+          console.log(err);
+        })
+
+
+    }); //for each
+  }
 
   const paginateData = (data) => {
     //receber o valor total e o atual para dividir o numero de paginas
@@ -120,7 +126,7 @@ let pokemons = [];
 
     const paginationContainer = document.querySelector('.pagination');
 
-    console.log(paginationContainer);
+
 
     while (paginationContainer.firstChild) {
       paginationContainer.removeChild(paginationContainer.firstChild);
@@ -267,13 +273,11 @@ getPokemon();
     <>
 
 
-
-
 <nav>
 <img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
 <ul>
-  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
-  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <li><a class = "item-navegacao" href = "/"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "/meuspokemons"> Meus PKMN </a></li>
   <SearchBar
        input={input}
        onChange={updateInput}
