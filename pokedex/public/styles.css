@@ -11,11 +11,13 @@
   height: 50px;
 }
 
+
 nav{
 
   display:flex;
   flex-flow:row;
   justify-content: space-between;
+ 
 }
 
 .item-navegacao{
@@ -65,13 +67,22 @@ li{
 
 .caixa-buscar{
   width: 120px;
+  height: auto;
   margin-right:10px;
+  border: 2px solid  #388cf7;
+  border-radius: 5px;
+  outline: none;
+  color: #ecc10c;
+  
+ 
 }
+
 
 .card{
   border: black 1px solid;
   margin: 10px;
   padding: 10px;
+  border-radius: 15px;
 
 }
 
@@ -161,4 +172,16 @@ align-items: center;
 
 .pagination span:hover:not(.active) {
   background-color: #ddd;
+}
+
+a:link {
+  color: #1c2968;
+}
+
+a:hover {
+  color: #3162a7;
+}
+
+a:active, :visited {
+  color: #ecc10c;
 }
