@@ -272,8 +272,8 @@ getPokemon();
 <nav>
 <img src = "./images/logo.png" alt = "Pokedex Logo" class = "logo"/>
 <ul>
-  <li><a class = "item-navegacao" href = "#"> Todos PKMN </a></li>
-  <li><a class = "item-navegacao"  href = "#"> Meus PKMN </a></li>
+  <li><a class = "item-navegacao" href = "/"> Todos PKMN </a></li>
+  <li><a class = "item-navegacao"  href = "/meuspokemons"> Meus PKMN </a></li>
   <SearchBar
        input={input}
        onChange={updateInput}
