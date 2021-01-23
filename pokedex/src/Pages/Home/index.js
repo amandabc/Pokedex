@@ -4,8 +4,118 @@ import SearchBar from './Components/SearchBar';
 import PokemonList from './Components/PokemonList';
 import TodoList from '../../Pokemos/TodoList';
 
+const mainDiv = document.getElementById("root");
+
+export function renderArray(array){
+ array.forEach(pokemon => {
+
+   const { name, url } = pokemon;
+
+   axios.get(url) //pega cada um
+     .then(response => {
+       setTimeout(function () { //mudar lugar
+         document.getElementById("loading").style.display = "none";
+       }, 1500);
 
 
+       const atributosDoPokemon = response.data;
+       const id = atributosDoPokemon.id;
+       const types = atributosDoPokemon.types;
+
+       var imageUrl = atributosDoPokemon.sprites.front_default;
+       if (imageUrl == null) {
+         imageUrl = atributosDoPokemon.sprites.other['official-artwork'].front_default;
+         if (imageUrl == null) {
+           imageUrl = 'https://cdn-0.imagensemoldes.com.br/wp-content/uploads/2020/04/Logo-Pokebola-Pok%C3%A9mon-PNG.png';
+         }
+       }
+
+       // let cardContainer = document.createElement("div");
+       // cardContainer.className ="card-container";
+       let cardContainer = document.querySelector(".card-wrapper");
+
+       mainDiv.appendChild(cardContainer);
+       createCard(id, name, imageUrl, types, cardContainer);
+       // createPokemonCard(id, name, imageUrl, types)
+
+     })//segundo .then
+     .catch(err => {
+       console.log("Erro ao pegar o pokemon + " + name);
+       console.log(err);
+     })
+
+
+ }); //for each
+
+
+} //fim render array
+
+function createCard(id, name, imageUrl, types, cardContainer){
+    //agora crio uma card com cada informação
+
+    let card = document.createElement("div");
+    card.className = "card";
+    card.id = name;
+
+    let cardInnerArea = document.createElement("div");
+    cardInnerArea.className = "card-inner-area";
+
+    let cardImg = document.createElement("img");
+    cardImg.className = "card-img";
+    cardImg.src = imageUrl;
+
+    let cardTextInfo = document.createElement("div");
+    cardTextInfo.className = "card-text-info";
+
+    let cardName = document.createElement("div");
+    cardName.className = "card-name";
+    cardName.innerHTML = name;
+
+    let cardId = document.createElement("div");
+    cardId.className = "card-id";
+    cardId.innerHTML = "#" + id;
+
+
+  let buttonCapturar = document.createElement("button");
+  buttonCapturar.className = "blue-button";
+  buttonCapturar.innerHTML =  "Capturar";
+  buttonCapturar.name = name;
+  buttonCapturar.addEventListener('click', capturarPokemon);
+
+
+
+    let typeNames = "";
+    types.forEach(element => typeNames += " " + element.type.name);
+
+    let cardType = document.createElement("div");
+    cardType.className = "types";
+    cardType.innerHTML = typeNames;
+
+
+  cardContainer.appendChild(card);
+  card.appendChild(cardInnerArea);
+  cardInnerArea.appendChild(cardImg);
+  cardInnerArea.appendChild(cardTextInfo);
+  cardTextInfo.appendChild(cardId);
+  cardTextInfo.appendChild(cardName);
+  cardTextInfo.appendChild(cardType);
+    card.appendChild(buttonCapturar);
+  } //fim de createCard
+
+  function capturarPokemon(e){
+    let name = e.path[1].id;
+
+    if (!pokemonsCapturados.includes(name)){
+      let url = "https://pokeapi.co/api/v2/pokemon/"+name;
+      pokemonsCapturados.push({name:name,  url:url});
+      localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
+      console.log("Capturou "+ name);
+    }
+    else{
+      console.log("Pokémon "+ name+" já capturado");
+    }
+
+  }//fim de capturar pokemon
 
 
 let pokemonsCapturados = [];
@@ -14,7 +124,7 @@ function Home(props){
 
 
 
-const mainDiv = document.getElementById("root");
+
 const [input, setInput] = useState('');
 const [pokemonListDefault, setPokemonListDefault] = useState();
 const [pokemonList, setPokemonList] = useState();
@@ -25,6 +135,8 @@ let pokemons = [];
 
   let paginaAtual = 1;
   const ITENS_POR_PAGINA = 20;
+
+
 
 
   function createPokemonCard(id, name, imageUrl, types) {
@@ -53,45 +165,8 @@ let pokemons = [];
        cardContainer.removeChild(cardContainer.firstChild);
     }
 
-        paginatedData[paginaAtual - 1].forEach(pokemon => {
+        renderArray(paginatedData[paginaAtual - 1]);
 
-          const { name, url } = pokemon;
-
-          axios.get(url) //pega cada um
-            .then(response => {
-              setTimeout(function () { //mudar lugar
-                document.getElementById("loading").style.display = "none";
-              }, 1500);
-
-
-              const atributosDoPokemon = response.data;
-              const id = atributosDoPokemon.id;
-              const types = atributosDoPokemon.types;
-
-              var imageUrl = atributosDoPokemon.sprites.front_default;
-              if (imageUrl == null) {
-                imageUrl = atributosDoPokemon.sprites.other['official-artwork'].front_default;
-                if (imageUrl == null) {
-                  imageUrl = 'https://cdn-0.imagensemoldes.com.br/wp-content/uploads/2020/04/Logo-Pokebola-Pok%C3%A9mon-PNG.png';
-                }
-              }
-
-              // let cardContainer = document.createElement("div");
-              // cardContainer.className ="card-container";
-              let cardContainer = document.querySelector(".card-wrapper");
-
-              mainDiv.appendChild(cardContainer);
-              createCard(id, name, imageUrl, types, cardContainer);
-              createPokemonCard(id, name, imageUrl, types)
-
-            })//segundo .then
-            .catch(err => {
-              console.log("Erro ao pegar o pokemon + " + name);
-              console.log(err);
-            })
-
-
-        }); //for each
 
         renderPaginationMenu(paginatedData);
 
@@ -101,6 +176,10 @@ let pokemons = [];
         console.log(err);
       });
   }//fim de getPokemon
+
+
+
+
 
   const paginateData = (data) => {
     //receber o valor total e o atual para dividir o numero de paginas
@@ -159,71 +238,8 @@ let pokemons = [];
     //por fim, método de avançãr a página que funciona igual o de voltar a página só que ao contrário :)
   }// fim de renderPaginationMenu
 
-function createCard(id, name, imageUrl, types, cardContainer){
-    //agora crio uma card com cada informação
-
-    let card = document.createElement("div");
-    card.className = "card";
-    card.id = name;
-
-    let cardInnerArea = document.createElement("div");
-    cardInnerArea.className = "card-inner-area";
-
-    let cardImg = document.createElement("img");
-    cardImg.className = "card-img";
-    cardImg.src = imageUrl;
-
-    let cardTextInfo = document.createElement("div");
-    cardTextInfo.className = "card-text-info";
-
-    let cardName = document.createElement("div");
-    cardName.className = "card-name";
-    cardName.innerHTML = name;
-
-    let cardId = document.createElement("div");
-    cardId.className = "card-id";
-    cardId.innerHTML = "#" + id;
 
 
-  let buttonCapturar = document.createElement("button");
-  buttonCapturar.className = "blue-button";
-  buttonCapturar.innerHTML =  "Capturar";
-  buttonCapturar.name = name;
-  buttonCapturar.addEventListener('click', capturarPokemon);
-
-
-
-    let typeNames = "";
-    types.forEach(element => typeNames += " " + element.type.name);
-
-    let cardType = document.createElement("div");
-    cardType.className = "types";
-    cardType.innerHTML = typeNames;
-
-
-  cardContainer.appendChild(card);
-  card.appendChild(cardInnerArea);
-  cardInnerArea.appendChild(cardImg);
-  cardInnerArea.appendChild(cardTextInfo);
-  cardTextInfo.appendChild(cardId);
-  cardTextInfo.appendChild(cardName);
-  cardTextInfo.appendChild(cardType);
-    card.appendChild(buttonCapturar);
-  } //fim de createCard
-
-function capturarPokemon(e){
-  let name = e.path[1].id;
-
-  if (!pokemonsCapturados.includes(name)){
-    pokemonsCapturados.push(name);
-    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
-    console.log("Capturou "+ name);
-  }
-  else{
-    console.log("Pokémon "+ name+" já capturado");
-  }
-
-}
 
 
 getPokemon();
