@@ -216,7 +216,7 @@ function capturarPokemon(e){
 
   if (!pokemonsCapturados.includes(name)){
     pokemonsCapturados.push(name);
-    localStorage.setItem('Pokemons Capturados', pokemonsCapturados);
+    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
     console.log("Capturou "+ name);
   }
   else{

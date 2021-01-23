@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import Home from '../Home'
 import SearchBar from '../Home/Components/SearchBar'
+import {useHistory} from 'react-router-dom';
 
 
 export default function MeusPokemons(){
+  const history = useHistory();
+  const [ pokemonsList, setPokemonsList ] = useState([]);
  let pokemonsCapturados = []
 
-   useEffect(()=>{
-    pokemonsCapturados = localStorage.getItem('Pokemons Capturados');
-  }, []);
+ useEffect(() => {
+  let pokemonsList = localStorage.getItem('pokemonsCapturados');
+  if (pokemonsList != null) {
+  pokemonsList = JSON.parse(pokemonsList);
+  setPokemonsList(pokemonsList)
+  console.log(pokemonsList)
+  localStorage.clear();
+  } else {
+      history.push('')
+  }
+}, []);
 
-  pokemonsCapturados.forEach(pokemon => console.log(pokemon.name))
   
   
 
