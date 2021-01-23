@@ -332,7 +332,9 @@ let pokemons = [];
       </div>
 
       <div class="card-wrapper">
-        <TodoList items={pokemons} />
+        <div class="card-item">
+          <TodoList items={pokemons} />
+        </div>
       </div>
       <div class="pagination-wrapper">
         <div class="pagination"></div>
@@ -343,7 +345,7 @@ let pokemons = [];
 
 
   );
-
+  
 }
 
 export default Home;
