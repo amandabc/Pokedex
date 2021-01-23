@@ -25,6 +25,10 @@ nav{
 }
 
 .nomesBusca{
+padding-bottom: 20px;
+padding-top: 20px;
+border-bottom: 2px solid #388cf7;
+padding-left: 20px;
 
 }
 
@@ -33,6 +37,10 @@ nav{
   flex-wrap: wrap;
   font-size: 10px;
   display: none;
+  border: 2px solid #388cf7;
+  border-radius: 5px;
+
+  
 }
 
 
@@ -67,7 +75,7 @@ li{
 
 .caixa-buscar{
   width: 120px;
-  height: auto;
+  height: 20px;
   margin-right:10px;
   border: 2px solid  #388cf7;
   border-radius: 5px;
@@ -124,7 +132,7 @@ li{
   height: 30px;
   padding: 10px 10px;
   font-size: 17px;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-right: 15px;
 }
 
@@ -186,6 +194,8 @@ a:active, :visited {
   color: #ecc10c;
 }
 
-.caixa-buscar{
-  height :  20px;
+
+
+span{
+  font-size: 20px;
 }

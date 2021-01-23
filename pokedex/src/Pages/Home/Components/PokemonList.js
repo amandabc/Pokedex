@@ -15,7 +15,7 @@ const PokemonList = ({pokemonList=[]}) => {
           return (
             <>
             <div class = {classe}>
-              <span class = "nomesBusca" >{data.name} </span>
+              <span >{data.name} </span>
               <button class = "blue-button-small" onClick = {capturarPokemon}>Capturar</button>
 
               </div>
