@@ -66,9 +66,16 @@ let pokemons = [];
 
               const atributosDoPokemon = response.data;
               const id = atributosDoPokemon.id;
-              const imageUrl = atributosDoPokemon.sprites.front_default;
               const types = atributosDoPokemon.types;
-
+      
+              var imageUrl = atributosDoPokemon.sprites.front_default;
+              if (imageUrl == null) {
+                imageUrl = atributosDoPokemon.sprites.other['official-artwork'].front_default;
+                if (imageUrl == null) {
+                  imageUrl = 'https://cdn-0.imagensemoldes.com.br/wp-content/uploads/2020/04/Logo-Pokebola-Pok%C3%A9mon-PNG.png';
+                }
+              }
+      
               // let cardContainer = document.createElement("div");
               // cardContainer.className ="card-container";
               let cardContainer = document.querySelector(".card-wrapper");
