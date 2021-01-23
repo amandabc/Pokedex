@@ -7,6 +7,32 @@ import PokemonList from './Components/PokemonList';
 const mainDiv = document.getElementById("root");
 const jaForamCapturados = false;
 
+export function capturarPokemon(e){
+let name ="";
+console.log(e);
+if(e.path){
+     name = e.path[1].classList[1];
+}
+else{
+ name = e.nativeEvent.path[1].classList[1];
+}
+  //let name = e.path[1].id;
+
+  //console.log(e.path[1].classList[1]);
+
+
+  if(pokemonsCapturados.filter(e => e.name === name).length === 0){
+    let url = "https://pokeapi.co/api/v2/pokemon/"+name;
+    pokemonsCapturados.push({name:name,  url:url});
+    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
+    console.log("Capturou "+ name);
+  }
+  else{
+    console.log("Pokémon "+ name+" já capturado");
+  }
+
+}//fim de capturar pokemon
+
 export function renderArray(array, jaForamCapturados){
 
  array.forEach(pokemon => {
@@ -58,7 +84,7 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
     //agora crio uma card com cada informação
 
     let card = document.createElement("div");
-    card.className = "card";
+    card.className = "card" +  " "+ name;
     card.id = name;
 
     let cardInnerArea = document.createElement("div");
@@ -112,21 +138,7 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
     card.appendChild(buttonCapturar);
   } //fim de createCard
 
-  function capturarPokemon(e){
-    let name = e.path[1].id;
 
-
-    if(pokemonsCapturados.filter(e => e.name === name).length === 0){
-      let url = "https://pokeapi.co/api/v2/pokemon/"+name;
-      pokemonsCapturados.push({name:name,  url:url});
-      localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
-      console.log("Capturou "+ name);
-    }
-    else{
-      console.log("Pokémon "+ name+" já capturado");
-    }
-
-  }//fim de capturar pokemon
 
   function soltarPokemon(e){
     let name = e.path[1].id;
@@ -278,8 +290,10 @@ let pokemons = [];
     return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
       .then(response => response.json())
       .then(data => {
+
          setPokemonList(data.results)
          setPokemonListDefault(data.results)
+         //document.querySelector(".resultadosDaBusca").style.display = "inline";
        });}
 
 
@@ -288,9 +302,18 @@ let pokemons = [];
       return pokemon.name.toLowerCase().startsWith(input.toLowerCase())
      })
      setInput(input);
-     console.log(filtered);
+
+     console.log(formata(filtered));
      setPokemonList(filtered);
 
+
+  }
+
+  function formata(array){
+
+    let result = "";
+    array.forEach(element=> result += element.name + " ");
+    return result;
   }
 
 

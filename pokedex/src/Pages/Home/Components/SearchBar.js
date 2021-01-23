@@ -3,17 +3,19 @@ import React from 'react';
 import PokemonList from './PokemonList'
 
 const SearchBar = ({input:keyword, onChange:setKeyword}) => {
- 
+
   return (
     <>
-    <input 
+    <input
      class="caixa-buscar"
      key="random1"
      value={keyword}
      placeholder={"Buscar pokemon"}
-     onChange={(e) => setKeyword(e.target.value)}
+     onChange={(e) => {
+       document.querySelector(".resultadosDaBusca").style.display = "block";
+       setKeyword(e.target.value)}}
     />
-    
+
     </>
   );
 }

@@ -22,11 +22,24 @@ nav{
   text-decoration: none;
 }
 
+.nomesBusca{
+
+}
+
+.resultadosDaBusca{
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 10px;
+  display: none;
+}
+
+
+
 .card-wrapper {
   display: grid;
   grid-template-columns: auto auto auto;
   padding: 10px;
-  
+
 }
 
 .card-item{
@@ -90,8 +103,18 @@ li{
   font-size: 17px;
   margin-top: 20px;
   margin-right: 15px;
+}
 
-
+.blue-button-small{
+  background-color: #388cf7;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  height: 30px;
+  padding: 10px 10px;
+  font-size: 17px;
+  margin-top: 20px;
+  margin-right: 15px;
 }
 
 #loading{
