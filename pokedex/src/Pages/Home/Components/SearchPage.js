@@ -12,10 +12,11 @@ function SearchPage(props) {
     return await fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1118')
       .then(response => response.json())
       .then(data => {
-         setPokemonList(data.results) 
-         setPokemonListDefault(data.results)   
+         setPokemonList(data.results)
+         console.log(data.results)
+         setPokemonListDefault(data.results)
        });}
-    
+
 
   const updateInput = async (input) => {
      const filtered = pokemonListDefault.filter(pokemon => {
@@ -26,12 +27,12 @@ function SearchPage(props) {
   }
 
   useEffect( () => {fetchData()},[]);
-	
+
   return (
     <>
       <h1>Pokemon List</h1>
-      <SearchBar 
-       input={input} 
+      <SearchBar
+       input={input}
        onChange={updateInput}
       />
       <PokemonList pokemonList={pokemonList}/>
