@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState,  Component } from "react";
 import SearchBar from './Components/SearchBar';
 import PokemonList from './Components/PokemonList';
-import TodoList from '../../Pokemos/TodoList';
+
 
 const mainDiv = document.getElementById("root");
 const jaForamCapturados = false;
@@ -285,9 +285,10 @@ let pokemons = [];
 
   const updateInput = async (input) => {
      const filtered = pokemonListDefault.filter(pokemon => {
-      return pokemon.name.toLowerCase().includes(input.toLowerCase())
+      return pokemon.name.toLowerCase().startsWith(input.toLowerCase())
      })
      setInput(input);
+     console.log(filtered);
      setPokemonList(filtered);
 
   }
@@ -333,7 +334,7 @@ let pokemons = [];
 
       <div class="card-wrapper">
         <div class="card-item">
-          <TodoList items={pokemons} />
+
         </div>
       </div>
       <div class="pagination-wrapper">
@@ -345,7 +346,7 @@ let pokemons = [];
 
 
   );
-  
+
 }
 
 export default Home;
