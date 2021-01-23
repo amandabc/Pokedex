@@ -8,7 +8,7 @@ const mainDiv = document.getElementById("root");
 const jaForamCapturados = false;
 
 export function renderArray(array, jaForamCapturados){
-  console.log("tamanho do array:"+ array.length);
+
  array.forEach(pokemon => {
 
    const { name, url } = pokemon;
@@ -130,15 +130,10 @@ function createCard(id, name, imageUrl, types, cardContainer, jaForamCapturados)
 
   function soltarPokemon(e){
     let name = e.path[1].id;
-    //console.log(name);
     removeCard(name);
-    console.log(name);
-    let pokemonsCapturados = localStorage.getItem('pokemonsCapturados');
-    console.log("capturados: "+ pokemonsCapturados);
-    //let pokemonsCapturados1 = pokemonsCapturados.filter(e=> e.name !== name);
-
-
-    //localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados1));
+    let pokemonsCapturados = JSON.parse(localStorage.getItem('pokemonsCapturados'));
+    pokemonsCapturados = pokemonsCapturados.filter(e=> e.name !== name);
+    localStorage.setItem('pokemonsCapturados', JSON.stringify(pokemonsCapturados));
   }
 
 function removeCard(name){
