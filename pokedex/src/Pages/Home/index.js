@@ -221,7 +221,8 @@ function capturarPokemon(e){
   let name = e.path[1].id;
 
   if (!pokemonsCapturados.includes(name)){
-    pokemonsCapturados.push(name);
+    let urlP = "https://pokeapi.co/api/v2/pokemon/"+name;
+    pokemonsCapturados.push({name: name, url: urlP} );
     localStorage.setItem('Pokemons Capturados', pokemonsCapturados);
     console.log("Capturou "+ name);
   }
